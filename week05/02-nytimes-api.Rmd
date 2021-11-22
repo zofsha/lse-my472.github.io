@@ -20,7 +20,7 @@ library("tidyverse")
 To understand how APIs work, we will take the New York Times Article Search API as an example. This API allows users to search articles by string and dates, and returns counts of articles and a short description of each article (but not the full text). You can create a new account and obtain a key [here](https://developer.nytimes.com/get-started). Afterwards, paste your key here:
 
 ```{r, eval = FALSE}
-apikey <- "r8qoNqHOeA53AHsEGWTKiW5y0JSUtuc7"
+apikey <- "1AGiPdPVA3YGWexpg193mVrsel41eRoK"
 ```
 
 The fist step is to identify the base URL of the endpoint and the parameters that we can use to query the API, for the Article Search API you can find this URL structure [here](https://developer.nytimes.com/docs/articlesearch-product/1/overview). Now we can do a first API call using the **httr** package.
@@ -137,7 +137,7 @@ nyt_years_count <- function(q, yearinit, yearend) {
 
 ```{r, error = TRUE}
 # Let us see what happens
-nyt_years_count(q = "inequality", yearinit = 2019, yearend = 2020)
+counts_inequality <-nyt_years_count(q = "inequality", yearinit = 2019, yearend = 2020)
 ```
 
 This seems to work as well. Next, we run this function for 50 years and plot the outcome:
@@ -147,7 +147,7 @@ counts_inequality <- nyt_years_count(q = "inequality", yearinit = 1970, yearend 
 ```
 
 ```{r}
-plot(1970:2020, counts_inequality, type = "l", main = "Mentions of inequality in the NYT by year",
+plot(2019:2020, counts_inequality, type = "l", main = "Mentions of inequality in the NYT by year",
      ylab = "Article count", xlab = "")
 ```
 

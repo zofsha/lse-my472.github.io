@@ -15,13 +15,13 @@ library("tidyverse")
 Specify the directory where the JSON files are stored:
 
 ```{r}
-current_dir <- "yourdirectoryhere"
+current_dir <- "/Users/zofshamerchant/Documents/R"
 ```
 
 Reading/parsing the first file into R:
 
 ```{r}
-example_1_parsed <- fromJSON(paste(current_dir, "example_1.json", sep = ""))
+example_1_parsed <- fromJSON(paste(current_dir, "e1.json", sep = ""))
 class(example_1_parsed)
 names(example_1_parsed)
 ```

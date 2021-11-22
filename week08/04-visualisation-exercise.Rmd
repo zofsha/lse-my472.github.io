@@ -42,24 +42,36 @@ Your code here:
 ```{r}
 
 # Transform date column to datetime (lubridate package!)
-
+unemp$date <- as_date(unemp$date)
 
 
 # Create a line-plot with unemployment and date
 
-
+p <- ggplot(unemp, aes(x = date, y = unemp)) + 
+  geom_line() 
 
 # Fix axes and add colored rectangles
 
+# Fix axes 
+xrange <- range(unemp$date, na.rm = TRUE)
+yrange <- range(unemp$unemp, na.rm = TRUE)
 
+p <- ggplot(unemp, aes(x = date, y = unemp)) + 
+  geom_line() + 
+  scale_x_date(limits = xrange, expand = c(0,0))
+print(p)
+
+# Add colored rectangles
+p <- p + geom_rect(data = pres, aes(ymin = 0, ymax = 0.12, xmin= start, xmax = end, fill = party), alpha = 0.2)
+print(p)
 
 # Adding president names
 
-
+geom_text(data = pres, aes(x = start, y=yrange[2]), label= name, angle = 90, hjust, vjust)
 
 # Adding lines to separate presidencies
 
-
+geom_vline(data = pres, aes(xintercept = as.numeric(start), linetype))
 
 # Finally, moving legend and removing x axis title
 
@@ -125,7 +137,7 @@ Animated 3D plot:
 #   - z-axis: message_length
 # see ?plot_ly for guidance!
 
-fig <- plot_ly(df_plot, _________, _________, _________, color = ~party)
+fig <- plot_ly(df_plot, x = likes_count, y = shares_count, z = message_length, color = ~party)
 fig <- fig %>% add_markers()
 fig <- fig %>% layout(scene = list(xaxis = list(title = "Log likes count"),
                      yaxis = list(title = "Log shares count"),
