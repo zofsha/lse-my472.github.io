@@ -1,22 +1,35 @@
 ---
 title: "Exercises in textual analysis"
 author: "Friedrich Geiecke"
-date: "08/11/2021"
+date: "11/11/2020"
 output: html_document
 ---
 
 
 **Exercise 1**
 
-1.1 The file uol.txt contains a list of the 17 member institutions of the University of London. In your text editor, write down a regular expression which finds all postcodes. Note that in some of the postcodes there are white spaces between the two parts and in others not. Your regular expression has to work with both.
+1.1 The file uol.txt contains a list of the 17 member institutions of the University of London. In your text editor, write down a regular expression which finds all postcodes. Note that in some of the postcodes there are white spaces between the two parts and in others not. Your regular expression has to work with both. WC1E 7HX
 
-fm_select(pattern = "*", valuetype = "regex")
-([A-Z]+\d*)( *\d*[A-Z]{2})
-[A-Z]{1,2}[0-9]{1,2}[A-Z]{0,1}[ ]{0,1}[0-9][A-Z]{2}
+For example, in a text editor: [A-Z]{1,2}\d{1,2}[A-Z]?\s?\d[A-Z]{2}
+Or within R:
+```{r}
+library("tidyverse")
+
+text <- read_file("uol.txt")
+str_view_all(text, "[A-Z]{1,2}\\d{1,2}[A-Z]?\\s?\\d[A-Z]{2}") # note the added backslashes for R
+```
 
 1.2 Next, let us try to mute/delete the second part of each postcode. Add a capturing group to your regular expression with which you can address only the first part, i.e. the first 2-4 characters of the postcodes. Then use find & replace in your text editor and replace all postcodes with only the information stored in capturing group 1. This deletes the second part of each postcode.
 
-str_replace_all()
+In a text editor:
+Find: ([A-Z]{1,2}\d{1,2}[A-Z]?)\s?\d[A-Z]{2}
+Replace: $1
+
+```{r}
+# replace full match with first capture group
+txt <- str_replace_all(text, "([A-Z]{1,2}\\d{1,2}[A-Z]?)\\s?\\d[A-Z]{2}", "\\1")
+print(txt)
+```
 
 **Exercise 2**
 
@@ -29,17 +42,16 @@ Let us assume for a moment that we only have three features/words in a dfm. Then
 ```{r}
 library("quanteda")
 library("quanteda.textstats")
-library("tidyverse")
 ```
 
 ```{r}
-dfm <- data_char_ukimmig2010 %>%                        # 1. study the data
+dfm <- data_char_ukimmig2010 %>%
   corpus() %>% 
-  tokens(remove_punct = TRUE, remove_numbers = TRUE) %>%    # 2. remove punctuation and numbers
-  tokens_remove(stopwords("en"), padding = TRUE) %>%                        # 3. remove stopwords (English)
-  tokens_wordstem() %>%                                     # 4. stem the tokens
+  tokens(remove_punct = TRUE, remove_numbers = TRUE) %>%
+  tokens_remove(stopwords("en")) %>%
+  tokens_wordstem() %>% 
   dfm() %>%
-  dfm_trim(min_termfreq = 2)                                 # 5. minimum word frequency = 2
+  dfm_trim(min_termfreq = 2)
 dfm
 ```
 
@@ -53,9 +65,7 @@ similarities <- textstat_simil(dfm, dfm[c("Conservative"), ],
 
 df_similarities <- as.data.frame(similarities)
 
-df_similarities %>% 
-  arrange(desc(cosine)) %>% 
-  head(10)
+df_similarities %>% arrange(desc(cosine)) %>% head(10)
 ```
 
 
